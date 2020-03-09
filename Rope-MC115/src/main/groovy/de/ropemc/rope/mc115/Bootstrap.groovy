@@ -6,7 +6,8 @@ class Bootstrap {
 
     static void premain(String args, Instrumentation instrumentation){
         Log.init()
-        Log.info('Rope v3.0.0')
+        Log.info('Rope v3.0.0 on MC('+readArgs().version+')')
+        instrumentation.addTransformer(new Transformer())
     }
 
     private static Map<String, String> readArgs(){
