@@ -19,4 +19,4 @@ Thats literally all you need to do and you are ready to launch.
 Rope will automatically generate a `Rope` directory in your minecraft directory containing all Rope related data (mods, configs, ...).
 
 ## Contribution
-If you want to contribute consider joining our [Discord]() because we discuss further development decisions over there.
+If you want to contribute consider joining our [Discord](https://discord.io/ropemc) because we discuss further development decisions over there.
