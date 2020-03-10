@@ -1,4 +1,4 @@
-package de.ropemc.rope.mc115.hook
+package de.ropemc.rope.loader.hook
 
 class Hook {
     private static int NEXT = 0

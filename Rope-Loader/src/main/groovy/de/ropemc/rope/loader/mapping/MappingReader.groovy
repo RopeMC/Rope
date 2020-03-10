@@ -1,4 +1,4 @@
-package de.ropemc.rope.mc115.mapping
+package de.ropemc.rope.loader.mapping
 
 class MappingReader {
     private final File mappingFile

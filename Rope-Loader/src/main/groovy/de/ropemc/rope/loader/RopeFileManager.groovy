@@ -1,4 +1,4 @@
-package de.ropemc.rope.mc115
+package de.ropemc.rope.loader
 
 class RopeFileManager {
 

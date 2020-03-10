@@ -1,7 +1,6 @@
-package de.ropemc.rope.mc115.mapping
+package de.ropemc.rope.loader.mapping
 
-import de.ropemc.rope.mc115.Log
-import de.ropemc.rope.mc115.RopeFileManager
+import de.ropemc.rope.loader.RopeFileManager
 import groovy.json.JsonSlurper
 
 class Mapping {

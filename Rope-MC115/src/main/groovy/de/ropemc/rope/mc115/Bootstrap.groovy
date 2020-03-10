@@ -1,8 +1,9 @@
 package de.ropemc.rope.mc115
 
-import de.ropemc.rope.mc115.hook.HookCall
-import de.ropemc.rope.mc115.hook.HookTransformer
-import de.ropemc.rope.mc115.mapping.Mapping
+import de.ropemc.rope.loader.Log
+import de.ropemc.rope.loader.hook.HookCall
+import de.ropemc.rope.loader.hook.HookTransformer
+import de.ropemc.rope.loader.mapping.Mapping
 
 import java.lang.instrument.Instrumentation;
 

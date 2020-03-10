@@ -11,6 +11,7 @@
     <modules>
         <module>Rope-API</module>
         <module>Rope-MC115</module>
+        <module>Rope-Loader</module>
     </modules>
 
     <properties>
@@ -51,6 +52,11 @@
             <dependency>
                 <groupId>de.ropemc</groupId>
                 <artifactId>Rope-API</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.ropemc</groupId>
+                <artifactId>Rope-Loader</artifactId>
                 <version>1.0</version>
             </dependency>
             <dependency>

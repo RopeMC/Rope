@@ -1,7 +1,6 @@
-package de.ropemc.rope.mc115.hook
+package de.ropemc.rope.loader.hook
 
-import de.ropemc.rope.mc115.Log
-import de.ropemc.rope.mc115.mapping.Mapping
+import de.ropemc.rope.loader.mapping.Mapping
 import javassist.ClassPool
 import javassist.CtClass
 import javassist.CtMethod
@@ -16,7 +15,7 @@ class HookTransformer implements ClassFileTransformer {
     byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         className = className.replace('/', '.')
         ClassPool cp = ClassPool.getDefault()
-        cp.importPackage('de.ropemc.rope.mc115.hook')
+        cp.importPackage('de.ropemc.rope.loader.hook')
         CtClass ctClass = cp.get(className)
         boolean hasHook = false
         hooks.each {

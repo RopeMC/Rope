@@ -1,4 +1,4 @@
-package de.ropemc.rope.mc115.event
+package de.ropemc.rope.loader.event
 
 import de.ropemc.rope.event.Event
 import de.ropemc.rope.event.EventBus
