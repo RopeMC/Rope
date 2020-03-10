@@ -2,6 +2,7 @@ package de.ropemc.rope.mc115
 
 import de.ropemc.rope.mc115.hook.HookCall
 import de.ropemc.rope.mc115.hook.HookTransformer
+import de.ropemc.rope.mc115.mapping.Mapping
 
 import java.lang.instrument.Instrumentation;
 
@@ -9,8 +10,10 @@ class Bootstrap {
 
     static void premain(String args, Instrumentation instrumentation){
         instrumentation.addTransformer(new HookTransformer())
+        String version = readArgs().version
         Log.init()
-        Log.info('Rope v3.0.0 on MC('+readArgs().version+')')
+        Log.info('Rope v3.0.0 on MC('+version+')')
+        Mapping.init(version)
         HookTransformer.before('eba', 'a', []){ HookCall call ->
             call.returnValue = 'Forge sucks!'
         }
