@@ -25,15 +25,19 @@ class Mapping {
         return true
     }
     private Map<String, String> classNames = [:]
+    private Map<String, String> fieldNames = [:]
     static String getClassName(String name){
         MAPPING.classNames[name]
+    }
+    static String getFieldName(String className, String name){
+        MAPPING.fieldNames[className+'@'+name]
     }
     boolean processClassMapping(String className, String obfClassName){
         classNames[className] = obfClassName
         return true
     }
     void processFieldMapping(String className, String fieldType, String fieldName, String obfClassName, String obfFieldName){
-
+        fieldNames[className+'@'+fieldName] = obfFieldName
     }
     void processMethodMapping(String className, int firstLineNumber, int lastLineNumber, String methodReturnType, String methodName, String methodArguments, String obfClassName, int obfFirstLineNumber, int obfLastLineNumber, String obfMethodName){
 
