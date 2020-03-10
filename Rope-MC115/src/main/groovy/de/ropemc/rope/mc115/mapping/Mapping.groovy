@@ -1,5 +1,6 @@
 package de.ropemc.rope.mc115.mapping
 
+import de.ropemc.rope.mc115.Log
 import de.ropemc.rope.mc115.RopeFileManager
 import groovy.json.JsonSlurper
 
@@ -26,11 +27,15 @@ class Mapping {
     }
     private Map<String, String> classNames = [:]
     private Map<String, String> fieldNames = [:]
+    private Map<String, String> methodNames = [:]
     static String getClassName(String name){
-        MAPPING.classNames[name]
+        MAPPING.classNames.getOrDefault(name, name)
     }
     static String getFieldName(String className, String name){
-        MAPPING.fieldNames[className+'@'+name]
+        MAPPING.fieldNames.getOrDefault(className+'@'+name, name)
+    }
+    static String getMethodName(String className, String name, List<String> paramTypes){
+        MAPPING.methodNames.getOrDefault(className+'@'+name+'('+paramTypes.join(',')+')', name)
     }
     boolean processClassMapping(String className, String obfClassName){
         classNames[className] = obfClassName
@@ -40,6 +45,6 @@ class Mapping {
         fieldNames[className+'@'+fieldName] = obfFieldName
     }
     void processMethodMapping(String className, int firstLineNumber, int lastLineNumber, String methodReturnType, String methodName, String methodArguments, String obfClassName, int obfFirstLineNumber, int obfLastLineNumber, String obfMethodName){
-
+        methodNames[className+'@'+methodName+'('+methodArguments+')'] = obfMethodName
     }
 }

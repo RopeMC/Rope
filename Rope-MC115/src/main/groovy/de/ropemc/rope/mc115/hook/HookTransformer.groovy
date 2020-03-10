@@ -1,6 +1,7 @@
 package de.ropemc.rope.mc115.hook
 
 import de.ropemc.rope.mc115.Log
+import de.ropemc.rope.mc115.mapping.Mapping
 import javassist.ClassPool
 import javassist.CtClass
 import javassist.CtMethod
@@ -62,11 +63,18 @@ class HookTransformer implements ClassFileTransformer {
         findHook(className, methodName, paramTypes).after.add(handler)
     }
     private static Hook findHook(String className, String methodName, List<String> paramTypes){
+        methodName = Mapping.getMethodName(className, methodName, paramTypes)
+        className = Mapping.getClassName(className)
+        List<String> realParamTypes = []
+        for(type in paramTypes){
+            int depth = type.count('[')
+            realParamTypes.add(Mapping.getClassName(type.substring(0, type.length()-(2*depth)))+('[]'*depth))
+        }
         for(hook in hooks){
             if(hook.className == className && hook.methodName == methodName && hook.paramTypes.size() == paramTypes.size()){
                 boolean paramsEqual = true
                 for(int i=0; i<paramTypes.size(); i++){
-                    if(hook.paramTypes[i] != paramTypes[i]){
+                    if(hook.paramTypes[i] != realParamTypes[i]){
                         paramsEqual = false
                         break
                     }
@@ -75,7 +83,7 @@ class HookTransformer implements ClassFileTransformer {
                     return hook
             }
         }
-        Hook hook = new Hook(className, methodName, paramTypes)
+        Hook hook = new Hook(className, methodName, realParamTypes)
         hooks.add(hook)
         return hook
     }

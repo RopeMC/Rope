@@ -14,7 +14,7 @@ class Bootstrap {
         Log.init()
         Log.info('Rope v3.0.0 on MC('+version+')')
         Mapping.init(version)
-        HookTransformer.before('eba', 'a', []){ HookCall call ->
+        HookTransformer.before('net.minecraft.client.resources.SplashManager', 'getSplash', []){ HookCall call ->
             call.returnValue = 'Forge sucks!'
         }
     }
