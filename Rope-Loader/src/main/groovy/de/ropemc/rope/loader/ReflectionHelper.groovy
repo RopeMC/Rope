@@ -9,9 +9,7 @@ class ReflectionHelper {
 
     static Object getStaticFieldValue(String className, String fieldName){
         Class clazz = Class.forName(Mapping.getClassName(className))
-        Log.info clazz
         Field field = clazz.getDeclaredField(Mapping.getFieldName(className, fieldName))
-        Log.info field
         if(!field.accessible)
             field.accessible = true
         return field.get(null)
@@ -24,7 +22,7 @@ class ReflectionHelper {
             typeClasses[i] = Class.forName(Mapping.getClassName(types.get(i)))
         }
         Constructor constructor = clazz.getDeclaredConstructor(typeClasses)
-        return constructor.newInstance(values)
+        return constructor.newInstance(values.toArray())
     }
 
 }

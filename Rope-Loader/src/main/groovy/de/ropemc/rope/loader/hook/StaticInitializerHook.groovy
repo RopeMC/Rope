@@ -4,8 +4,8 @@ class StaticInitializerHook {
     private static int NEXT = 0
     final int id
     final String className
-    final List<Closure> callbacks = []
-
+    final List<Closure> before = []
+    final List<Closure> after = []
     StaticInitializerHook(String className){
         this.id = NEXT
         NEXT++

@@ -1,0 +1,17 @@
+package de.ropemc.rope.mc115
+
+enum CreativeModeTab {
+    TAB_BUILDING_BLOCKS,
+    TAB_DECORATIONS,
+    TAB_REDSTONE,
+    TAB_TRANSPORTATION,
+    TAB_MISC,
+    TAB_SEARCH,
+    TAB_FOOD,
+    TAB_TOOLS,
+    TAB_COMBAT,
+    TAB_BREWING,
+    TAB_MATERIALS,
+    TAB_HOTBAR,
+    TAB_INVENTORY
+}
