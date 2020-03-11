@@ -1,6 +1,6 @@
 package de.ropemc.rope.loader.hook
 
-class Hook {
+class MethodHook {
     private static int NEXT = 0
     final int id
     final String className
@@ -8,7 +8,8 @@ class Hook {
     final List<String> paramTypes
     final List<Closure> before = []
     final List<Closure> after = []
-    Hook(String className, String methodName, List<String> paramTypes){
+
+    MethodHook(String className, String methodName, List<String> paramTypes){
         this.id = NEXT
         NEXT++
         this.className = className

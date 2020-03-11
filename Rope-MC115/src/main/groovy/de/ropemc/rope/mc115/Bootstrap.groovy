@@ -1,9 +1,14 @@
 package de.ropemc.rope.mc115
 
 import de.ropemc.rope.loader.Log
+import de.ropemc.rope.loader.ReflectionHelper
 import de.ropemc.rope.loader.hook.HookCall
 import de.ropemc.rope.loader.hook.HookTransformer
 import de.ropemc.rope.loader.mapping.Mapping
+import javassist.ClassPool
+import javassist.CtClass
+import javassist.CtConstructor
+import javassist.CtMethod
 
 import java.lang.instrument.Instrumentation;
 
@@ -18,6 +23,16 @@ class Bootstrap {
         HookTransformer.before('net.minecraft.client.resources.SplashManager', 'getSplash', []){ HookCall call ->
             call.returnValue = 'Forge sucks!'
         }
+        HookTransformer.staticInitializer('net.minecraft.world.item.CreativeModeTab'){
+            ClassPool cp = ClassPool.getDefault()
+            CtClass newTabClass = cp.makeClass('de.ropemc.rope.generated.tabs.Test', cp.get(Mapping.getClassName('net.minecraft.world.item.CreativeModeTab')))
+            CtMethod makeIcon = new CtMethod(cp.get(Mapping.getClassName('net.minecraft.world.item.ItemStack')), Mapping.getMethodName('net.minecraft.world.item.CreativeModeTab','makeIcon', []), new CtClass[0], newTabClass)
+            makeIcon.setBody("{return new ${Mapping.getClassName('net.minecraft.world.item.ItemStack')}(${Mapping.getClassName('net.minecraft.world.item.Items')}.${Mapping.getFieldName('net.minecraft.world.item.Items', 'TNT')});}")
+            newTabClass.addMethod(makeIcon)
+            Class cl = newTabClass.toClass()
+            cl.getConstructor(int.class, String.class).newInstance(4, 'test')
+        }
+
     }
 
     private static Map<String, String> readArgs(){
