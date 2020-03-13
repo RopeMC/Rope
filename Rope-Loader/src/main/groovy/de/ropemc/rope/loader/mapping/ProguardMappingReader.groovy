@@ -1,8 +1,9 @@
 package de.ropemc.rope.loader.mapping
 
-class MappingReader {
+class ProguardMappingReader {
     private final File mappingFile
-    MappingReader(File mappingFile) {
+
+    ProguardMappingReader(File mappingFile) {
         this.mappingFile = mappingFile
     }
     void read(Mapping mapping) throws IOException {
@@ -60,7 +61,6 @@ class MappingReader {
         String type = line.substring(colonIndex2 + 1, spaceIndex).trim()
         String name = line.substring(spaceIndex + 1, argumentIndex1 >= 0 ? argumentIndex1 : arrowIndex).trim()
         String newName = line.substring(arrowIndex + 2).trim()
-        String newClassName = className
         int dotIndex = name.lastIndexOf('.')
         if (dotIndex >= 0) {
             className = name.substring(0, dotIndex)
@@ -68,22 +68,10 @@ class MappingReader {
         }
         if (type.length() > 0 && name.length() > 0 && newName.length() > 0) {
             if (argumentIndex2 < 0) {
-                mapping.processFieldMapping(className, type, name, newClassName, newName)
+                mapping.processFieldMapping(className, name, newName)
             } else {
-                int firstLineNumber = 0
-                int lastLineNumber = 0
-                int newFirstLineNumber = 0
-                int newLastLineNumber = 0
-                if (colonIndex2 >= 0) {
-                    firstLineNumber = newFirstLineNumber = Integer.parseInt(line.substring(0, colonIndex1).trim())
-                    lastLineNumber = newLastLineNumber = Integer.parseInt(line.substring(colonIndex1 + 1, colonIndex2).trim())
-                }
-                if (colonIndex3 >= 0) {
-                    firstLineNumber = Integer.parseInt(line.substring(colonIndex3 + 1, colonIndex4 > 0 ? colonIndex4 : arrowIndex).trim())
-                    lastLineNumber = colonIndex4 < 0 ? firstLineNumber : Integer.parseInt(line.substring(colonIndex4 + 1, arrowIndex).trim())
-                }
                 String arguments = line.substring(argumentIndex1 + 1, argumentIndex2).trim()
-                mapping.processMethodMapping(className, firstLineNumber, lastLineNumber, type, name, arguments, newClassName, newFirstLineNumber, newLastLineNumber, newName)
+                mapping.processMethodMapping(className, name, arguments, newName)
             }
         }
     }
