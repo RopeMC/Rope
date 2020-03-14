@@ -105,6 +105,22 @@ class Bootstrap implements RopeAPI {
                 }
             }
         }
+        HookTransformer.before('net.minecraft.server.packs.resources.SimpleReloadableResourceManager', 'getNamespaces', []){ call ->
+            Set<String> namespaces = new HashSet<>(ReflectionHelper.getFieldValue('net.minecraft.server.packs.resources.SimpleReloadableResourceManager', 'namespaces', call.instance) as Set<String>)
+            // -> Add own namespaces if not present
+            call.returnValue = namespaces
+        }
+        HookTransformer.before('net.minecraft.server.packs.resources.SimpleReloadableResourceManager', 'listResources', ['java.lang.String','java.util.function.Predicate']){ call ->
+            List resourceLocations = new ArrayList()
+            Map<String, Object> namespacedPacks = ReflectionHelper.getFieldValue('net.minecraft.server.packs.resources.SimpleReloadableResourceManager', 'namespacedPacks', call.instance)
+            namespacedPacks.values().each {
+                resourceLocations.addAll(ReflectionHelper.callMethod('net.minecraft.server.packs.resources.FallbackResourceManager', 'listResources', ['java.lang.String','java.util.function.Predicate'], it, Arrays.asList(call.params)))
+            }
+            String path = call.params[0]
+            // -> Add own resource locations
+            Collections.sort(resourceLocations)
+            call.returnValue = resourceLocations
+        }
         // -> SimpleReloadableResourceManager needs to be overwritten to load data
     }
 
