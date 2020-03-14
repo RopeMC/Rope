@@ -6,9 +6,11 @@ import javassist.ClassPool
 import javassist.CtClass
 import javassist.CtConstructor
 import javassist.CtMethod
+import org.codehaus.groovy.runtime.InvokerInvocationException
 
 import java.lang.instrument.ClassFileTransformer
 import java.lang.instrument.IllegalClassFormatException
+import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.security.ProtectionDomain
 import java.util.function.Consumer
@@ -214,7 +216,12 @@ class HookTransformer implements ClassFileTransformer {
             Method method = clazz.getDeclaredMethod('__'+hook.methodName, paramTypes)
             if(!method.isAccessible())
                 method.setAccessible(true)
-            call.returnValue = method.invoke(call.instance, call.params)
+            try {
+                Log.info method.getName()
+                call.returnValue = method.invoke(call.instance, call.params)
+            }catch(InvocationTargetException ex){
+                ex.targetException.printStackTrace()
+            }
         }
         for(handler in hook.after){
             handler.accept(call)
