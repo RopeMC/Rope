@@ -105,20 +105,7 @@ class Bootstrap implements RopeAPI {
                 }
             }
         }
-        HookTransformer.before('net.minecraft.server.packs.VanillaPack', 'hasResource', ['net.minecraft.server.packs.PackType', 'net.minecraft.resources.ResourceLocation']){ call ->
-            ResourceLocation rl = new ResourceLocation(call.params[1])
-            File resourceFile = new File(new File(assetsFolder, rl.getNamespace()), rl.getPath())
-            if(resourceFile.exists()){
-                call.returnValue = true
-            }
-        }
-        HookTransformer.before('net.minecraft.server.packs.VanillaPack', 'getResourceAsStream', ['net.minecraft.server.packs.PackType', 'net.minecraft.resources.ResourceLocation']){ call ->
-            ResourceLocation rl = new ResourceLocation(call.params[1])
-            File resourceFile = new File(new File(assetsFolder, rl.getNamespace()), rl.getPath())
-            if(resourceFile.exists()){
-                call.returnValue = resourceFile.newInputStream()
-            }
-        }
+        // -> SimpleReloadableResourceManager needs to be overwritten to load data
     }
 
 }

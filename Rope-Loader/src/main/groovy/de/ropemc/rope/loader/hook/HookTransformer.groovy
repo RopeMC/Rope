@@ -32,10 +32,7 @@ class HookTransformer implements ClassFileTransformer {
                 for(int i=0; i<ctParams.length; i++){
                     ctParams[i] = cp.get(it.paramTypes[i])
                 }
-                CtMethod oldMethod = ctClass.getDeclaredMethod(it.methodName, ctParams)
-                oldMethod.setName('__'+it.methodName)
-                CtMethod method = new CtMethod(oldMethod.returnType, it.methodName, oldMethod.parameterTypes, ctClass)
-                method.modifiers = oldMethod.modifiers
+                CtMethod method = ctClass.getDeclaredMethod(it.methodName, ctParams)
                 StringBuilder sb = new StringBuilder()
                 for(int i=0; i<it.paramTypes.size(); i++){
                     sb.append('params[')
@@ -44,10 +41,11 @@ class HookTransformer implements ClassFileTransformer {
                     sb.append(i+1)
                     sb.append(';')
                 }
-                String body = """{
+                String body = """
                 Object[] params = new Object[${it.paramTypes.size()}];${sb.toString()}
                 HookCall hookCall=new HookCall(\$0,params);
-                HookTransformer.callMethodHook(${it.id},hookCall);
+                HookTransformer.callMethodLOCHook(${it.id},hookCall);
+                if(hookCall.isReturned()){
                 """
                 switch (method.returnType){
                     case CtClass.voidType:
@@ -59,13 +57,9 @@ class HookTransformer implements ClassFileTransformer {
                         body+='return ('+method.returnType.name+')hookCall.getReturnValue();'
                         break
                 }
-                body += '}'
-                try {
-                    method.setBody(body)
-                }catch(Throwable t){
-                    Log.error t.message
-                }
-                ctClass.addMethod(method)
+                body+='}'
+                method.insertBefore(body.replace('LOC', 'Before'))
+                method.insertAfter(body.replace('LOC', 'After'))
             }
         }
         staticInitializerHooks.each {
@@ -202,27 +196,14 @@ class HookTransformer implements ClassFileTransformer {
         }
         return null
     }
-    static void callMethodHook(int id, HookCall call){
+    static void callMethodBeforeHook(int id, HookCall call){
         MethodHook hook = getMethodHook(id)
         for(handler in hook.before){
             handler.accept(call)
         }
-        if(!call.isReturned()){
-            Class<?> clazz = Class.forName(convertName(hook.className))
-            Class[] paramTypes = new Class[hook.paramTypes.size()]
-            for(int i=0; i<paramTypes.length; i++){
-                paramTypes[i] = Class.forName(convertName(hook.paramTypes[i]))
-            }
-            Method method = clazz.getDeclaredMethod('__'+hook.methodName, paramTypes)
-            if(!method.isAccessible())
-                method.setAccessible(true)
-            try {
-                Log.info method.getName()
-                call.returnValue = method.invoke(call.instance, call.params)
-            }catch(InvocationTargetException ex){
-                ex.targetException.printStackTrace()
-            }
-        }
+    }
+    static void callMethodAfterHook(int id, HookCall call){
+        MethodHook hook = getMethodHook(id)
         for(handler in hook.after){
             handler.accept(call)
         }

@@ -26,4 +26,8 @@ class ResourceLocation {
         internal.class.getMethod(Mapping.getMethodName('net.minecraft.resources.ResourceLocation', 'getNamespace', [])).invoke(internal)
     }
 
+    String toString(){
+        namespace+':'+path
+    }
+
 }
